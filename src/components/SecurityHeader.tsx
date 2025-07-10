@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Shield, Bell, User, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SettingsModal } from "./SettingsModal";
 
 export function SecurityHeader() {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   return (
     <header className="border-b border-border bg-card/50 backdrop-blur-sm">
       <div className="flex h-16 items-center justify-between px-6">
@@ -31,7 +34,7 @@ export function SecurityHeader() {
             </Badge>
           </Button>
           
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(true)}>
             <Settings className="h-5 w-5" />
           </Button>
           
@@ -40,6 +43,11 @@ export function SecurityHeader() {
           </Button>
         </div>
       </div>
+      
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </header>
   );
 }

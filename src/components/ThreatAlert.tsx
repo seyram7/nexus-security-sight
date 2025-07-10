@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { AlertTriangle, Shield, Zap, Bug, Eye } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ThreatDetailModal } from "./ThreatDetailModal";
 
 interface Threat {
   id: string;
@@ -19,6 +21,8 @@ interface ThreatAlertProps {
 }
 
 export function ThreatAlert({ threats }: ThreatAlertProps) {
+  const [selectedThreat, setSelectedThreat] = useState<Threat | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const getIcon = (type: Threat['type']) => {
     switch (type) {
       case 'malware': return Bug;
@@ -73,9 +77,13 @@ export function ThreatAlert({ threats }: ThreatAlertProps) {
               <div
                 key={threat.id}
                 className={cn(
-                  "p-3 rounded-lg border transition-all duration-300 hover:scale-102",
+                  "p-3 rounded-lg border transition-all duration-300 hover:scale-102 cursor-pointer",
                   getCardBorder(threat.severity)
                 )}
+                onClick={() => {
+                  setSelectedThreat(threat);
+                  setIsModalOpen(true);
+                }}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-3">
@@ -112,6 +120,12 @@ export function ThreatAlert({ threats }: ThreatAlertProps) {
           })
         )}
       </CardContent>
+      
+      <ThreatDetailModal
+        threat={selectedThreat}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </Card>
   );
 }

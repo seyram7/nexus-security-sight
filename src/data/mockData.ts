@@ -43,13 +43,35 @@ export const mockThreats = [
   }
 ];
 
-export const mockMetrics = {
-  totalDevices: 247,
-  activeThreats: 3,
-  blockedAttacks: 1847,
-  networkUptime: '99.8%',
-  bandwidth: '2.4 Gbps',
-  connectedUsers: 156,
-  dataProtected: '14.2 TB',
-  systemLoad: 67
-};
+export const mockMetrics = [
+  {
+    title: "Protected Devices",
+    value: 247,
+    change: "+12 from last week",
+    type: "devices" as const
+  },
+  {
+    title: "Active Threats",
+    value: 3,
+    change: "2 resolved today",
+    type: "threats" as const
+  },
+  {
+    title: "Blocked Attacks",
+    value: "1,847",
+    change: "+89 in last 24h",
+    type: "attacks" as const
+  },
+  {
+    title: "Network Uptime",
+    value: "99.8%",
+    change: "99.5% last month",
+    type: "uptime" as const
+  },
+  {
+    title: "Connected Users",
+    value: 156,
+    change: "+23 since morning",
+    type: "users" as const
+  }
+];

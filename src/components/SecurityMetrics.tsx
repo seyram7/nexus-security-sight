@@ -1,103 +1,101 @@
-import { SecurityCard } from "./SecurityCard";
-import { 
-  Shield, 
-  AlertTriangle, 
-  Activity, 
-  Lock, 
-  Zap, 
-  Server,
-  Users,
-  Database
-} from "lucide-react";
+import { useState } from "react";
+import { Shield, AlertTriangle, Activity, Users } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ProtectedDevicesModal } from "./ProtectedDevicesModal";
+import { NetworkUptimeModal } from "./NetworkUptimeModal";
+import { ConnectedUsersModal } from "./ConnectedUsersModal";
 
-interface MetricsData {
-  totalDevices: number;
-  activeThreats: number;
-  blockedAttacks: number;
-  networkUptime: string;
-  bandwidth: string;
-  connectedUsers: number;
-  dataProtected: string;
-  systemLoad: number;
+interface SecurityMetric {
+  title: string;
+  value: string | number;
+  change: string;
+  type: 'devices' | 'threats' | 'attacks' | 'uptime' | 'users';
 }
 
 interface SecurityMetricsProps {
-  data: MetricsData;
+  data: SecurityMetric[];
 }
 
 export function SecurityMetrics({ data }: SecurityMetricsProps) {
+  const [protectedDevicesOpen, setProtectedDevicesOpen] = useState(false);
+  const [networkUptimeOpen, setNetworkUptimeOpen] = useState(false);
+  const [connectedUsersOpen, setConnectedUsersOpen] = useState(false);
+
+  const getIcon = (type: SecurityMetric['type']) => {
+    switch (type) {
+      case 'devices': return Shield;
+      case 'threats': return AlertTriangle;
+      case 'attacks': return Shield;
+      case 'uptime': return Activity;
+      case 'users': return Users;
+      default: return Shield;
+    }
+  };
+
+  const getColorClass = (type: SecurityMetric['type']) => {
+    switch (type) {
+      case 'devices': return 'border-security-success/50 hover:border-security-success';
+      case 'threats': return 'border-security-critical/50 hover:border-security-critical';
+      case 'attacks': return 'border-security-info/50 hover:border-security-info';
+      case 'uptime': return 'border-security-success/50 hover:border-security-success';
+      case 'users': return 'border-security-info/50 hover:border-security-info';
+      default: return 'border-border';
+    }
+  };
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <SecurityCard
-        title="Protected Devices"
-        value={data.totalDevices}
-        description="Active network devices"
-        icon={Shield}
-        status="success"
-        trend="stable"
+      {data.map((metric, index) => {
+        const Icon = getIcon(metric.type);
+        const colorClass = getColorClass(metric.type);
+        
+        const handleClick = () => {
+          if (metric.type === 'devices') {
+            setProtectedDevicesOpen(true);
+          } else if (metric.type === 'uptime') {
+            setNetworkUptimeOpen(true);
+          } else if (metric.type === 'users') {
+            setConnectedUsersOpen(true);
+          }
+        };
+        
+        const isClickable = metric.type === 'devices' || metric.type === 'uptime' || metric.type === 'users';
+        
+        return (
+          <Card 
+            key={index} 
+            className={`transition-all duration-300 hover:scale-105 ${isClickable ? 'cursor-pointer' : ''} ${colorClass}`}
+            onClick={isClickable ? handleClick : undefined}
+          >
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-card-foreground">
+                {metric.title}
+              </CardTitle>
+              <Icon className="h-4 w-4 text-primary" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-card-foreground">{metric.value}</div>
+              <p className="text-xs text-muted-foreground">
+                {metric.change}
+              </p>
+            </CardContent>
+          </Card>
+        );
+      })}
+      
+      <ProtectedDevicesModal
+        isOpen={protectedDevicesOpen}
+        onClose={() => setProtectedDevicesOpen(false)}
       />
       
-      <SecurityCard
-        title="Active Threats"
-        value={data.activeThreats}
-        description="Requiring immediate attention"
-        icon={AlertTriangle}
-        status={data.activeThreats > 0 ? "critical" : "success"}
-        trend={data.activeThreats > 5 ? "up" : "down"}
+      <NetworkUptimeModal
+        isOpen={networkUptimeOpen}
+        onClose={() => setNetworkUptimeOpen(false)}
       />
       
-      <SecurityCard
-        title="Blocked Attacks"
-        value={data.blockedAttacks}
-        description="In the last 24 hours"
-        icon={Lock}
-        status="info"
-        trend="up"
-      />
-      
-      <SecurityCard
-        title="Network Uptime"
-        value={data.networkUptime}
-        description="System availability"
-        icon={Activity}
-        status="success"
-        trend="stable"
-      />
-      
-      <SecurityCard
-        title="Bandwidth Usage"
-        value={data.bandwidth}
-        description="Current network utilization"
-        icon={Zap}
-        status="neutral"
-        trend="stable"
-      />
-      
-      <SecurityCard
-        title="Connected Users"
-        value={data.connectedUsers}
-        description="Active authenticated sessions"
-        icon={Users}
-        status="info"
-        trend="up"
-      />
-      
-      <SecurityCard
-        title="Data Protected"
-        value={data.dataProtected}
-        description="Encrypted and secured"
-        icon={Database}
-        status="success"
-        trend="stable"
-      />
-      
-      <SecurityCard
-        title="System Load"
-        value={`${data.systemLoad}%`}
-        description="Server resource utilization"
-        icon={Server}
-        status={data.systemLoad > 80 ? "warning" : "success"}
-        trend={data.systemLoad > 85 ? "up" : "stable"}
+      <ConnectedUsersModal
+        isOpen={connectedUsersOpen}
+        onClose={() => setConnectedUsersOpen(false)}
       />
     </div>
   );
