@@ -4,6 +4,7 @@ import { ThreatAlert } from "@/components/ThreatAlert";
 import { NetworkChart } from "@/components/NetworkChart";
 import { SystemSecurityPanel } from "@/components/SystemSecurityPanel";
 import { SecurityCLI } from "@/components/SecurityCLI";
+import { NetworkConfiguration } from "@/components/NetworkConfiguration";
 import { mockNetworkData, mockThreats, mockMetrics } from "@/data/mockData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -14,10 +15,11 @@ const Index = () => {
       
       <main className="p-6">
         <Tabs defaultValue="dashboard" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="system">System Security</TabsTrigger>
             <TabsTrigger value="cli">Command Interface</TabsTrigger>
+            <TabsTrigger value="config">Network Config</TabsTrigger>
             <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
           </TabsList>
 
@@ -59,6 +61,10 @@ const Index = () => {
 
           <TabsContent value="cli" className="mt-6">
             <SecurityCLI />
+          </TabsContent>
+
+          <TabsContent value="config" className="mt-6">
+            <NetworkConfiguration />
           </TabsContent>
 
           <TabsContent value="monitoring" className="space-y-6 mt-6">
