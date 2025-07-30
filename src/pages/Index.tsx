@@ -3,8 +3,7 @@ import { SecurityMetrics } from "@/components/SecurityMetrics";
 import { ThreatAlert } from "@/components/ThreatAlert";
 import { NetworkChart } from "@/components/NetworkChart";
 import { SystemSecurityPanel } from "@/components/SystemSecurityPanel";
-import { SecurityCLI } from "@/components/SecurityCLI";
-import { NetworkConfiguration } from "@/components/NetworkConfiguration";
+import { UnifiedNetworkCLI } from "@/components/UnifiedNetworkCLI";
 import { mockNetworkData, mockThreats, mockMetrics } from "@/data/mockData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -60,11 +59,11 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="cli" className="mt-6">
-            <SecurityCLI />
+            <UnifiedNetworkCLI />
           </TabsContent>
 
           <TabsContent value="config" className="mt-6">
-            <NetworkConfiguration />
+            <UnifiedNetworkCLI />
           </TabsContent>
 
           <TabsContent value="monitoring" className="space-y-6 mt-6">
