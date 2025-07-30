@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProtectedDevicesModal } from "./ProtectedDevicesModal";
 import { NetworkUptimeModal } from "./NetworkUptimeModal";
 import { ConnectedUsersModal } from "./ConnectedUsersModal";
+import { BlockedAttacksModal } from "./BlockedAttacksModal";
 
 interface SecurityMetric {
   title: string;
@@ -20,6 +21,7 @@ export function SecurityMetrics({ data }: SecurityMetricsProps) {
   const [protectedDevicesOpen, setProtectedDevicesOpen] = useState(false);
   const [networkUptimeOpen, setNetworkUptimeOpen] = useState(false);
   const [connectedUsersOpen, setConnectedUsersOpen] = useState(false);
+  const [blockedAttacksOpen, setBlockedAttacksOpen] = useState(false);
 
   const getIcon = (type: SecurityMetric['type']) => {
     switch (type) {
@@ -56,10 +58,12 @@ export function SecurityMetrics({ data }: SecurityMetricsProps) {
             setNetworkUptimeOpen(true);
           } else if (metric.type === 'users') {
             setConnectedUsersOpen(true);
+          } else if (metric.type === 'attacks') {
+            setBlockedAttacksOpen(true);
           }
         };
         
-        const isClickable = metric.type === 'devices' || metric.type === 'uptime' || metric.type === 'users';
+        const isClickable = ['devices', 'uptime', 'users', 'attacks'].includes(metric.type);
         
         return (
           <Card 
@@ -96,6 +100,11 @@ export function SecurityMetrics({ data }: SecurityMetricsProps) {
       <ConnectedUsersModal
         isOpen={connectedUsersOpen}
         onClose={() => setConnectedUsersOpen(false)}
+      />
+      
+      <BlockedAttacksModal
+        isOpen={blockedAttacksOpen}
+        onClose={() => setBlockedAttacksOpen(false)}
       />
     </div>
   );

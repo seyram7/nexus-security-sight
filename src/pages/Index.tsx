@@ -49,7 +49,12 @@ const Index = () => {
               
               {/* Active Threats Panel */}
               <div>
-                <ThreatAlert threats={mockThreats} />
+                <ThreatAlert 
+                  threats={mockThreats} 
+                  onThreatAction={(threatId, action) => {
+                    console.log(`Threat ${threatId} action: ${action}`);
+                  }}
+                />
               </div>
             </section>
           </TabsContent>
