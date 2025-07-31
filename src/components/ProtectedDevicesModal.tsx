@@ -1,9 +1,11 @@
-import { Monitor, Smartphone, Laptop, Server, Shield, AlertTriangle } from "lucide-react";
+import { Monitor, Smartphone, Laptop, Server, Shield, AlertTriangle, Zap } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 interface ProtectedDevicesModalProps {
   isOpen: boolean;
@@ -64,6 +66,9 @@ const mockDevices = [
 ];
 
 export function ProtectedDevicesModal({ isOpen, onClose }: ProtectedDevicesModalProps) {
+  const { toast } = useToast();
+  const [scanning, setScanning] = useState<string | null>(null);
+  const [scanningAll, setScanningAll] = useState(false);
   const getDeviceIcon = (type: string) => {
     switch (type) {
       case 'server': return Server;
@@ -84,6 +89,40 @@ export function ProtectedDevicesModal({ isOpen, onClose }: ProtectedDevicesModal
     return <Badge className="bg-security-success text-white">Secure</Badge>;
   };
 
+  const handleQuickScan = (deviceId: string, deviceName: string) => {
+    setScanning(deviceId);
+    toast({
+      title: "Quick Scan Started",
+      description: `Initiating quick scan for ${deviceName}...`,
+    });
+    
+    // Simulate scan duration
+    setTimeout(() => {
+      setScanning(null);
+      toast({
+        title: "Quick Scan Complete",
+        description: `${deviceName} scan completed successfully.`,
+      });
+    }, 2000);
+  };
+
+  const handleForceQuickScanAll = () => {
+    setScanningAll(true);
+    toast({
+      title: "Force Quick Scan Initiated",
+      description: "Starting quick scan on all devices...",
+    });
+    
+    // Simulate scan duration for all devices
+    setTimeout(() => {
+      setScanningAll(false);
+      toast({
+        title: "Force Quick Scan Complete",
+        description: `All ${mockDevices.length} devices scanned successfully.`,
+      });
+    }, 3000);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
@@ -101,7 +140,14 @@ export function ProtectedDevicesModal({ isOpen, onClose }: ProtectedDevicesModal
               className="flex-1"
             />
             <Button variant="outline">Add Device</Button>
-            <Button>Scan All</Button>
+            <Button 
+              onClick={handleForceQuickScanAll}
+              disabled={scanningAll}
+              className="flex items-center space-x-2"
+            >
+              <Zap className="h-4 w-4" />
+              <span>{scanningAll ? "Scanning..." : "Force Quick Scan All"}</span>
+            </Button>
           </div>
 
           <div className="rounded-lg border">
@@ -151,7 +197,16 @@ export function ProtectedDevicesModal({ isOpen, onClose }: ProtectedDevicesModal
                       </TableCell>
                       <TableCell>
                         <div className="flex space-x-1">
-                          <Button variant="outline" size="sm">Scan</Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleQuickScan(device.id, device.name)}
+                            disabled={scanning === device.id || scanningAll}
+                            className="flex items-center space-x-1"
+                          >
+                            <Zap className="h-3 w-3" />
+                            <span>{scanning === device.id ? "Scanning..." : "Quick Scan"}</span>
+                          </Button>
                           <Button variant="ghost" size="sm">Details</Button>
                         </div>
                       </TableCell>
