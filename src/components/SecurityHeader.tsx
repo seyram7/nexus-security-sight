@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Shield, Bell, User, Settings } from "lucide-react";
+import { Shield, User, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SettingsModal } from "./SettingsModal";
+import { NotificationsPopover } from "./NotificationsPopover";
 
 export function SecurityHeader() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
