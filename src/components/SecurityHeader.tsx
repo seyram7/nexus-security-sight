@@ -28,12 +28,7 @@ export function SecurityHeader() {
             System Secure
           </Badge>
           
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs bg-security-critical">
-              3
-            </Badge>
-          </Button>
+          <NotificationsPopover />
           
           <Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(true)}>
             <Settings className="h-5 w-5" />
